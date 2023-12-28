@@ -1,0 +1,12 @@
+# Rename this file to languages.toml to enable multilingual support
+[en]
+languageName = "English"
+languagedirection = "ltr"
+title = "Archie Meng"
+weight = 1
+
+[zh-cn]
+languageName = "简体中文"
+languagedirection = "ltr"
+title = "Archie Meng"
+weight = 1
