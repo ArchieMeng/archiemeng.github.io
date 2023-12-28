@@ -17,8 +17,6 @@ tags = [
 ]
 +++
 
-# Waifu2x android，这才是我的“本科毕业设计” - 前言+SWIG篇
-
 ## Changelog
 > 2021/12/27
 > 对指针binding部分添加了C++部分的源码，更正了buffer interface带来的性能提升的说法，补充说明了Mat对应的Wrapper。
