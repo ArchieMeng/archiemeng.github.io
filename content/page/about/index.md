@@ -4,7 +4,7 @@ description:
 date: '2023-12-28'
 aliases:
   - about-us
-  - about-hugo
+  - about-archiemeng
   - contact
 license: CC BY-NC-ND
 lastmod: 
