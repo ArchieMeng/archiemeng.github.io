@@ -1,5 +1,5 @@
 ---
-title: "Chromebook Duet Review"
+title: "Chromebook Duet评测报告"
 description:
 date: 2021-10-20T13:49:00+08:00
 image: 

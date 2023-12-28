@@ -2,6 +2,8 @@
 title: "Merry Xmas to the 17-Year-Old Archie"
 description: 
 date: 2023-12-25T21:54:41+08:00
+categories:
+    - Life
 image: 
 math: 
 license: 

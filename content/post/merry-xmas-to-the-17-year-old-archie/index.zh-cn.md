@@ -2,6 +2,8 @@
 title: "致十年前十七岁的阿奇"
 description: 
 date: 2023-12-25T21:54:41+08:00
+categories:
+    - Life
 image: 
 math: 
 license: 
