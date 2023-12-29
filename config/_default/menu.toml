@@ -25,3 +25,12 @@ weight = 3
 
 [social.params]
 icon = "mail"
+
+[[social]]
+identifier = "rss"
+name = "RSS"
+url = "/index.xml"
+weight = 4
+
+[social.params]
+icon = "rss"
