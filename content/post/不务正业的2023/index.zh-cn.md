@@ -49,9 +49,9 @@ tags:
 
 ![国庆回桂林，漫展上拍的小波奇](assets/DSC_2141.JPG)
 
-![东西巷一景](assets/DSC_2186.JPG)
+![东西巷一景](assets/DSC_2186_edited.jpg) 
 
-*![十月去上海找基友玩时拍的](assets/DSC_2438.JPG)*
+![十月去上海找基友玩时拍的](assets/DSC_2438_edited.jpg)
 
 ![昙华林的流浪狗狗](assets/DSC_3021.JPG)
 
