@@ -50,6 +50,11 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Install Node.js dependencies
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Generate default post for non-default language
+        run: |
+          for post in $(ls -d content/post/*); do
+            test -f "$post/index.zh-cn.md" || cp "$post/index.md" "$post/index.zh-cn.md"
+          done
       - name: Build with Hugo
         env:
           # For maximum backward compatibility with Hugo modules
