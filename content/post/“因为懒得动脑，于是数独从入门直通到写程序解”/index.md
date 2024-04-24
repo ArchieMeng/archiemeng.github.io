@@ -9,6 +9,13 @@ hidden: false
 comments: false
 isCJKLanguage: true
 draft: false
+categories: ["Tech"]
+tags: [
+    "数独",
+    "Python",
+    "算法",
+    "约束编程",
+]
 ---
 
 事情是这样的，看了一篇[别人的数独入门的文章](https://rikumi.notion.site/Good-Sudoku-72033a35ca5a4449a981347e5a560bf4)。然后发现，技巧有点点多啊……啊，不想动脑，遂想直接写程序解决。**如果能用程序解决，为啥要动脑？**  
