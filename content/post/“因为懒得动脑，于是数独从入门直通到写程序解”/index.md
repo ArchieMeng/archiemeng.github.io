@@ -1,7 +1,7 @@
 ---
-title: "“因为懒得动脑，于是数独从入门直通到写程序解”"
+title: "Too Lazy to Use Brainpower, So Sudoku: From Beginner to Writing Code for Solutions"
 description: 
-date: 2024-04-23T20:08:38+08:00
+date: 2024-05-18T15:15:30+08:00
 image: 
 math: 
 license: 
@@ -11,26 +11,26 @@ isCJKLanguage: true
 draft: false
 categories: ["Tech"]
 tags: [
-    "数独",
+    "Sudoku",
     "Python",
-    "算法",
-    "约束编程",
+    "Algorithm",
+    "Constraint Programming",
 ]
 ---
 
-事情是这样的，看了一篇[别人的数独入门的文章](https://rikumi.notion.site/Good-Sudoku-72033a35ca5a4449a981347e5a560bf4)。然后发现，技巧有点点多啊……啊，不想动脑，遂想直接写程序解决。**如果能用程序解决，为啥要动脑？**  
+So, here's the thing. I read [someone else's introductory article on Sudoku](https://rikumi.notion.site/Good-Sudoku-72033a35ca5a4449a981347e5a560bf4). I realized there were quite a few techniques… Ah, I didn't want to think too much, so I decided to write a program to solve it instead. Why use brain power when a program can do at ease?
 
-## 要想求解，那得先有题目
+## To solve it, you need a puzzle first
 
-首先，如果要写出求解程序，那就必须先有一个生成数独题面的程序。（其实，这也就是针对题面全为空时的特殊求解程序）
+First of all, to write a solving program, you need a program to generate a Sudoku puzzle. (Actually, this is a special case of solving a puzzle where the grid is completely empty.)
 
-总的算法是:
+The general algorithm is:
 
-1. 往数独矩阵里一个一个地填数字。
-2. 没有数字可以填的时候，就回溯上一个填数位置
-3. 重复这个过程，直到整个矩阵被填满。
+1. Fill numbers into the Sudoku grid one by one.
+2. If there is no number that can be filled, backtrack to the previous position.
+3. Repeat this process until the entire grid is filled.
 
-### 样例代码
+### Sample code
 
 ```Python
 from time import time
@@ -105,24 +105,23 @@ for r in gen_map():
     print(' '.join(map(str, r)))
 ```
 
-### 解析
+### Analysis
 
 #### RestrictMatrix
 
-首先，RestrictMatrix是一个根据数独规则，实时记录并更新矩阵中每一个位置可以填数字的哈希表约束矩阵。按照规则，可以保存三个与位置关系相对应的可放数字的哈希表：
-- 横向不能有重复数字 >>> 按行保存可放的数字, **即其中的"rowMat"**
+First, RestrictMatrix is a hash table constraint matrix that records and updates the valid numbers that can be filled in each position of the grid in real-time according to Sudoku rules. According to the rules, it can save three hash tables of valid numbers corresponding to the position relationships:
 
-- 纵向不能有重复数字 >>> 按列保存可放的数字, **即其中的"colMat"**
+- No repeated numbers in rows >>> Save valid numbers by row, **which is "rowMat"**
+- No repeated numbers in columns >>> Save valid numbers by column, **which is "colMat"**
+- No repeated numbers within the 3x3 subgrid >>> Save valid numbers by subgrid index, **which is "blockMat"**
 
-- 所在的九宫格内不能有重复数字 >>> 按九宫格序号保存可放数字，**即其中的"blockMat"**
+The actual numbers that can be placed in each position are the intersection of these three hash tables at that position (a series of numbers that are common to the three hash tables at that position). Each time a number is placed, it is taken out of the intersection of the corresponding positions of the three hash tables.
 
-每一个位置实际可放的数字就是该位置的三个哈希表内容的交集（该位置三个哈希表共有的一系列数字）。每一次放入数字，便从三个哈希表的对应位置交集里取出对应数字。
-
-这里使用了哈希表而没有像普通的约束编程一样用01矩阵，主要还是因为其调用方式简单明了。~~（我才不会说是因为我不怎么写编程题，所以不太会那种写法呢。）~~
+Using a hash table instead of a 0-1 matrix, a data structure commonly  used in ordinary constraint programming, is mainly because its usage is  simple and straightforward. ~~(I'm not saying it's because I rarely write programming problems, so I'm not very good at that method.)~~
 
 ##### \_\_init\_\_
 
-初始化约束矩阵。最初，因为所有位置皆为空，所以都可以填任何数字。于是，全填1-9的数字。
+Initialize the constraint matrix. Initially, since all positions are  empty, any number can be filled. So, fill all with numbers 1-9.
 
 ```Python
 def __init__(self):
@@ -134,7 +133,7 @@ def __init__(self):
 
 ##### drop
 
-当在**r**行**c**列填入数字**v**时调用。更新当前整个盘面的可填数字。
+Called when a number **v** is placed in row **r**, column **c**. Update the valid numbers for the entire grid.
 
 ```Python
 def drop(self, v, r, c):
@@ -149,11 +148,11 @@ def drop(self, v, r, c):
     self.blockMat[posToIdx(r, c)].discard(v)
 ```
 
-这里使用discard来取出数字是因为要忽略掉
+Here, **discard** is used to remove the number because we need to ignore the absence of the number.
 
 ##### put
 
-当**r**行**c**列取出数字**v**时调用。一般后一候选位置没有可填数字的时候，需要当前位置更改所填数字时发生。因为要换一个数字填，所以需要将此时已经填入的数字**v**从盘面上拿下来，再放回约束矩阵中。同时也需要更新候选数字。
+Called when the number **v** is removed from row **r**, column **c**. Generally happens when there are no numbers to fill in the next  candidate position and the current position needs to change the filled  number. Since a different number needs to be filled, the number **v** that has been filled needs to be removed from the grid and put back  into the constraint matrix. Also, the candidate numbers need to be  updated.
 
 ```Python
 def put(self, v, r, c):
@@ -165,7 +164,7 @@ def put(self, v, r, c):
 
 ##### validNums
 
-将保存着**r**行**c**列三个约束条件的哈希表取交集，即可得到当前位置可填数字。
+Take the intersections of the three constraint hash tables for row **r** and column **c** to get the numbers that can be placed in the current position.
 
 ```Python
 def validNums(self, r, c):
@@ -173,9 +172,9 @@ def validNums(self, r, c):
     return self.rowMat[r] & self.colMat[c] & self.blockMat[posToIdx(r, c)]
 ```
 
-#### 求解步骤
+#### Solving steps
 
-首先，需要初始化要用到的数据结构：数独盘面，一个约束矩阵还有一个用于记录当前已尝试了的位置和所填数的栈（每次尝试之后，都要把当前状态压入）。其中，如果位置填0,则表示该位置没有填入数字，为空位。
+First, initialize the data structures to be used: the Sudoku grid, a  constraint matrix, and a stack to record the current position and  numbers tried (each time after trying, push the current state into the  stack). If the position is filled with 0, it indicates that the position is empty and no number has been filled.
 
 ```Python
 m = [[0 for i in range(9)] for _ in range(9)]
@@ -185,25 +184,25 @@ stack = deque()
 stack.append(((0, 0), set()))
 ```
 
-开始求解的循环。以栈的容量为条件只是我的习惯罢了，后面会发现其实永远不为空，循环如果没有跳出条件会一直进行。
+Start the solving loop. Using the stack size as a condition is just my habit; you'll find out later that it actually never empties, and the loop will continue if there's no exit condition.
 
 ```Python
 while stack:
 ```
 
-每次开始时，都从栈中弹出当前要尝试填入的位置和当前位置已尝试过的数字的信息。第一次的时候肯定是(0,0)和 {} (空集)。之后随着不断尝试和填入下一个尝试位置会有所变化。
+At the beginning of each iteration, pop the current position and the  numbers tried from the stack. At the first time, it will definitely be (0,  0) and {} (empty set). After continuous attempts and filling the next  position, it will change.
 
 ```Python
 	(r, c), triedNums = stack.pop()
 ```
 
-选出当前可供尝试的数字。这个候选数字是通过在当前位置可填的数字中，剔除已经尝试过了的数字得到的。
+Select the numbers that can be tried for the current position. These candidate numbers are obtained by removing the numbers already tried  from the possible numbers for the current position.
 
 ```Python
 	candidates = list(resMat.validNums(r, c) - triedNums)
 ```
 
-如果发现有可以填入的可尝试数字，则进行填入操作。
+If there are numbers that can be tried, proceed with filling.
 
 ```Python
     if len(candidates) > 0:
@@ -216,37 +215,37 @@ while stack:
         stack.append(((r, c), triedNums))
 ```
 
-其中，使用rand.choice来随机选中一个数字来填。
+Here, **rand.choice** is used to randomly select a number to fill.
 
-如果当前位置不为0，则说明之前已经填入过数字，需要取出放回约束矩阵。
+If the current position is not 0, it means a number has been filled before, and it needs to be removed and put back into the constraint matrix.
 
 ```Python
         if m[r][c] != 0:
             resMat.put(m[r][c], r, c)
 ```
 
-处理好之后，就可以进行填入数字的操作。
+After the checks, you can proceed with filling the number.
 
 ```Python
         m[r][c] = n
         resMat.drop(n, r, c)
 ```
 
-还需要把这个数字记录到当前已经尝试过的表里，并压回栈中，以待后续填不下的时候弹出来重新选数重填。
+Also, record this number in the set of numbers tried. Push it back into  the stack so it can be popped out and tried again when unable to proceed
 
 ```Python
         triedNums.add(n)
         stack.append(((r, c), triedNums))
 ```
 
-填完之后，需要判断一下是否填完了。因为是从左往右从上往下的填入顺序，所以当当前位置是(8,8)的时候，即是最后位置。如果能填完数的话，就整个填完了，可以直接返回数独牌面跳出循环了。
+After filling, check if it is complete. Since the filling order is from left to right and top to bottom, when the current position is (8, 8), it enters the last position. If the number can be filled, the entire grid is  filled, and the Sudoku grid can be returned, exiting the loop.
 
 ```Python
         if r == 8 and c == 8:
             return m
 ```
 
-若不是，则计算下一个位置，并压入栈中。等下次弹出时尝试。
+If not, calculate the next position and push it into the stack to be tried next time.
 
 ```Python
         else:
@@ -255,7 +254,7 @@ while stack:
             stack.append(((r, c), set()))
 ```
 
-而假如当前位置已经没有可以尝试填入的数字时，则不继续往下尝试。而是取出当前已经填入的数（如果有的话）。
+If there are no numbers that can be tried at the current position, do  not continue but remove the number (if any) that has been filled.
 
 ```Python
     # 对应之前有候选数的分支
@@ -266,22 +265,20 @@ while stack:
             m[r][c] = 0
 ```
 
-
-
-最后，得到解的话，就可以打印数独盘面了。
+Finally, if a solution is obtained, print the Sudoku grid.
 
 ```Python
 for r in gen_map():
     print(' '.join(map(str, r)))
 ```
 
-## 改写成一般求解程序
+## Rewriting into a general solving program
 
-因为生成盘面的程序本身就是一种特殊情况下的求解程序。只需要将候选位置的更新算法和对应的记录方法修改即可改成一般求解程序。
+Since the program to generate the grid is essentially a special case of  the solving program, it only needs to modify the candidate position  update algorithm and the corresponding recording method to turn it into a general solving program.
 
-### 代码
+### Code
 
-除了gen_map有所变化以外，其他都是一样的。所以不一一列出了。
+Only the **gen_map** function changes; the rest are exactly the same, so they are not listed one by one.
 
 ```Python
 def gen_map(m):
@@ -324,9 +321,9 @@ def gen_map(m):
     return m
 ```
 
-### 解析
+### Analysis
 
-首先，相比起生成盘面时已知的待求解数和待填位置，一般求解时需要首先分析出这些。只有填0的才是需要求解的位置，其他位置都不需要管，也不要动。
+First, compared to generating a grid where the numbers to be solved and  the positions to be filled are known, general solving requires analyzing these first. Only positions filled with 0 need to be solved; others do not need to be touched or moved.
 
 ```Python
     cnt, target = 0, 9 * 9
@@ -340,11 +337,11 @@ def gen_map(m):
                 queue.append(((i, j), set()))
 ```
 
-下一个尝试位置的更新以及求解完成的判定条件也有所改变。
+The update of the next position and the condition for determining if the solution is complete have also changed.
 
-当已填入位置数等于待求解数时，即完成。
+When the number of positions filled equals the number to be solved, it is complete.
 
-位置更新方式改由从(queue)队尾取出一个待解位置放入队头，来让下次从队列里取位置的时候取出来。
+The position update method is changed by taking a position to be solved from the end of the queue and placing it at the front, so that it can be taken out next time from the queue.
 
 ```Python
     queue.append(((r, c), triedNums))
@@ -354,7 +351,7 @@ def gen_map(m):
         queue.append(queue.popleft())
 ```
 
-而当前位置无候选数字的时候，便需要往队列里填回一个全新的待解位置。但不放入队头，因为需要回退待解位置的操作。
+When there are no candidate numbers at the current position, a new  position to be solved needs to be filled back into the queue but not at  the front, because backtracking is needed.
 
 ```Python
     else:
@@ -365,6 +362,6 @@ def gen_map(m):
         queue.appendleft(((r, c), set()))
 ```
 
-## 后记 ~~（叠甲）~~
+## Postscript
 
-其实，我也知道我写的可能多少会有点可读性的问题，以及实现上欠考虑的地方。如果有啥意见或者改进建议，欢迎私聊笔者。~~(就算是这样，笔者起码也断断续续想了一周才写出来。我太菜了........)~~
+Actually, I know that my writing might have some readability issues and  implementation considerations. If you have any comments or suggestions  for improvement, feel free to message me privately. ~~(Even so, it took me about a week to come up with this intermittently. I'm so bad...)~~

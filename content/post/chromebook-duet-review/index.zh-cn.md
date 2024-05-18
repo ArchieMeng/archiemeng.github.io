@@ -2,6 +2,7 @@
 title: "Chromebook Duet评测报告"
 description:
 date: 2021-10-20T13:49:00+08:00
+lastmod: 2024-05-18T14:31:23+08:00
 image: 
 math: 
 license: 
@@ -67,7 +68,10 @@ Geekbench Linux x86_64 爆内存，在多核Horizon Detection项目跑挂了。
 - lib32-gcc 和 lib32-glibc比较麻烦，他们居然互为依赖。
 
 ## Android support?
-B站客户端视频黑屏，我在开发中的Waifu2x ncnn也没法跑，估计是容器没有视频硬解，Vulkan API。（奇怪的是Youtube的Android客户端却可以看视频，不明白啊。难道有特殊的技巧？）
+~~B站客户端视频黑屏，我在开发中的Waifu2x ncnn也没法跑，估计是容器没有视频硬解，Vulkan API。（奇怪的是Youtube的Android客户端却可以看视频，不明白啊。难道有特殊的技巧？）~~
+
+由于现在Google已经给Android虚拟机里加入了Vulkan功能，所以已经没有这些Vulkan相关的问题了。同时，Bilibili也修复了客户端视频黑屏了的问题。
+
 部分游戏也卡加载画面，比如ブルーアーカイブ。
 但原神，少前云图计划是可以的。
 
