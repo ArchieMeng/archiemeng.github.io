@@ -2,6 +2,7 @@
 title: "The Only Neat Life to Live"
 description: 
 date: 2024-06-14T23:44:41+08:00
+lastmod: 2024-06-24T23:05:47+08:00
 image: IMG_0020.jpg
 math: 
 license: 
@@ -25,7 +26,7 @@ Inherit humanity, across the edges of future.
 
 
 
-However tech may be, the miracle makers are always humans. 
+However tech may evolve, humans always archive miracles.
 
 Fifteen souls, fifty hundred rounds, 
 
