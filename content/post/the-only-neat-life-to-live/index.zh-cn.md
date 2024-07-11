@@ -2,7 +2,7 @@
 title: "此生可矣"
 description: 
 date: 2024-06-14T23:44:41+08:00
-lastmod: 2024-06-24T23:05:47+08:00
+lastmod: 2024-07-11T23:59:24+08:00
 image: IMG_0020.jpg
 math: 
 license: 
@@ -18,7 +18,9 @@ tags:
   - 十三机兵防卫圈
 ---
 
-穿越时代，故事长存。
+{{% youtube TiPfx-328ys %}}
+
+穿越时代，神话长存。
 
 顽童涌现，绵延海滨。
 
