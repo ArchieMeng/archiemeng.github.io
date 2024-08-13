@@ -1,3 +1,23 @@
+---
+title: "懒得动脑的我，于是数独从入门直通到写程序解"
+description: 
+date: 2024-05-18T15:15:30+08:00
+image: 
+math: 
+license: 
+hidden: false
+comments: false
+isCJKLanguage: true
+draft: false
+categories: ["Tech"]
+tags: [
+    "Sudoku",
+    "Python",
+    "Algorithm",
+    "Constraint Programming",
+]
+---
+
 事情是这样的，看了一篇[别人的数独入门的文章](https://rikumi.notion.site/Good-Sudoku-72033a35ca5a4449a981347e5a560bf4)。然后发现，技巧有点点多啊……啊，不想动脑，遂想直接写程序解决。**如果能用程序解决，为啥要动脑？**  
 
 ## 要想求解，那得先有题目

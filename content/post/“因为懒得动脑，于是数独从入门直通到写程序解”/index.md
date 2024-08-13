@@ -7,7 +7,7 @@ math:
 license: 
 hidden: false
 comments: false
-isCJKLanguage: true
+isCJKLanguage: false
 draft: false
 categories: ["Tech"]
 tags: [
