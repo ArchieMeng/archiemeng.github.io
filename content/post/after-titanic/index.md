@@ -2,6 +2,7 @@
 title: "对泰坦尼克的一些感想"
 description: The little thoughts after watching "Titanic"
 date: 2024-08-10T14:31:43+08:00
+lastmod: 2024-08-18T16:19:36+08:00
 image: 
 math: 
 license: 
@@ -34,13 +35,13 @@ draft: false
 >
 > Rose: It turns out that Mr. Dawson is quite a fine artist. He was kind enough to show me some of his work today.
 >
-> 家暴男：Rose and I differ somewhat in our definition of fine art. Not to impugn your work sir.
+>  家暴男： Rose and I differ somewhat in our definition of fine art. Not to impugn your work sir.
 >
 > （Jack 摆手，然后看向Rose, 不知所措。看到端上来的餐具感到迷惑，不知道使用顺序。转向旁边的那啥夫人。）
 >
 > ...... (随后进入最高潮的名场景)
 >
-> Rose她妈：And where exactly do you live, Mr. Dawson.
+> Rose她妈： And where exactly do you live, Mr. Dawson.
 >
 > Jack: Well, right now, my address is the RMS Titanic. After that, I'm on God's good humor.
 >
@@ -48,7 +49,7 @@ draft: false
 >
 > Jack: I work my way from place to place. You know, tramp steamers and such. But I won my ticket on Titanic here. At a lucky hand at poker. A very luck hand.
 >
-> 有点胖的绅士：All life is a game of luck.家暴男（不服）：A real man makes his won luck, Archie. Right, Dawson?
+> Archie：All life is a game of luck.家暴男（不服）：A real man makes his won luck, Archie. Right, Dawson?
 >
 > Jack: En!
 >
@@ -74,36 +75,32 @@ draft: false
 
 说实话，这一段让我有种当时《爱乐之城》中，石头姐决定离开当前的饭局，前去找高司令的既视感。
 
-![mpv-shot0047](assets/mpv-shot0047.jpg)
+![](assets/mpv-shot0047.jpg)
 
-![mpv-shot0048](assets/mpv-shot0048.jpg)
+![看向隔壁桌](assets/mpv-shot0048.jpg)
 
-![mpv-shot0049](assets/mpv-shot0049.jpg)
+![](assets/mpv-shot0049.jpg)
 
-![mpv-shot0050](assets/mpv-shot0050.jpg)
+![小女孩有样学样地学习贵族礼仪](assets/mpv-shot0050.jpg)
 
 或许是看到这里死板迂腐的贵族礼仪和规训，这一幕之后，便是Rose去找杰克，在泰坦尼克号船头，被扶着“展翅高飞”的名场景。
 
-![mpv-shot0051](assets/mpv-shot0051.jpg)
+![名场景](assets/mpv-shot0051.jpg)
 
 ## 你会从这里逃出去的
 
-![mpv-shot0053](assets/mpv-shot0053.jpg)Jack安慰Rose,给她打气，约定好不要放弃。这也有了下一幕Rose决定活下去，勇敢呼救的，充满极强求生欲的镜头。
+![Jack安慰Rose,给她打气，约定好不要放弃。这也有了下一幕Rose决定活下去，勇敢呼救的，充满极强求生欲的镜头。](assets/mpv-shot0053.jpg)
 
-![mpv-shot0052](assets/mpv-shot0052.jpg)
+![从最开始绝望到试图自杀的贵族未婚妻，逐渐变为了一个自立自强的独立女性。](assets/mpv-shot0052.jpg)
 
 ## 临终时的床头要摆什么？
 
-![mpv-shot0054](assets/mpv-shot0054.jpg)
+![Rose不仅做到了像男人一样骑马，还做到了攻读大学学位，开飞机，环游世界等一系列事情。可以说是极其精彩的一生。](assets/mpv-shot0054.jpg)
 
-Rose不仅做到了像男人一样骑马，还做到了攻读大学学位，开飞机，环游世界等一系列事情。可以说是极其精彩的一生。
-
-*而我临终时的床头，要摆点什么好呢？*
+*看完这一幕，我不禁在想：我临终时的床头，会摆点什么呢？*
 
 ## 愿有情人终成眷属
 
-![mpv-shot0055](assets/mpv-shot0055.jpg)
-
-紧接着临终的那一幕的，便是Rose在最后，与Jack于泰坦尼克号之中相遇。每每看到这一幕，我的泪水都会不由自主地涌出来。
+![紧接着临终的那一幕的，便是Rose在最后，与Jack于泰坦尼克号之中相遇。每每看到这一幕，我的泪水都会不由自主地涌出来。](assets/mpv-shot0055.jpg)
 
 加上上一个画面，这电影的结尾一下子让我哭两次。真强。
