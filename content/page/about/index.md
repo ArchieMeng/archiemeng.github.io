@@ -7,7 +7,6 @@ aliases:
   - about-archiemeng
   - contact
 license: CC BY-NC-ND
-lastmod: 
 menu:
     main: 
         weight: 5
