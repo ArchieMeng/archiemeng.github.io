@@ -1,0 +1,36 @@
+# Configure main menu and social menu
+[[social]]
+identifier = "github"
+name = "GitHub"
+url = "https://github.com/ArchieMeng"
+weight = 1
+
+[social.params]
+icon = "brand-github"
+
+[[social]]
+identifier = "bilibili"
+name = "Bilibili"
+url = "https://space.bilibili.com/1817258478"
+weight = 2
+
+[social.params]
+icon = "brand-bilibili"
+
+[[social]]
+identifier = "email"
+name = "Email"
+url = "mailto:archiemeng@protonmail.com"
+weight = 3
+
+[social.params]
+icon = "mail"
+
+[[social]]
+identifier = "rss"
+name = "RSS"
+url = "/zh-cn/index.xml"
+weight = 4
+
+[social.params]
+icon = "rss"
