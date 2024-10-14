@@ -37,7 +37,7 @@ jobs:
       - name: Trigger remote CI
         run: |
           if [ -n "${{secrets.TriggerUrl}}" ]; then
-            curl "${{secrets.TriggerUrl}}"
+            curl "${{secrets.TriggerUrl}}" || true
           fi
       - name: Install Hugo CLI
         run: |
