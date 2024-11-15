@@ -2,7 +2,7 @@
 title: "Some thoughts after watching Titanic"
 description: The little thoughts after watching "Titanic"
 date: 2024-08-10T14:31:43+08:00
-lastmod: 2024-09-28T12:58:20+08:00
+lastmod: 2024-11-15T21:09:32+08:00
 image: 
 math: 
 license: 
@@ -72,15 +72,15 @@ This, perhaps, is what it means to be truly 'cool'.
 
 To be honest, this scene gave me the same vibe as the moment in "La La Land" when Emma Stone decides to leave the current dinner party to go find Ryan Gosling.
 
-![](assets/mpv-shot0047.jpg)
+![Absent minded during the noble meal](assets/mpv-shot0047.jpg)
 
 ![looking at the table besides](assets/mpv-shot0048.jpg)
 
 ![](assets/mpv-shot0049.jpg)
 
-![little girl learning noble manners](assets/mpv-shot0050.jpg) # Todo: phrase check
+![little girl learning boring noble manners](assets/mpv-shot0050.jpg) 
 
-Perhaps it was the stiff and old-fashioned aristocratic etiquette and discipline on display here that pushed Rose to seek Jack. What followed was the iconic scene at the bow of the Titanic, where Jack holds her as she "flies."
+Perhaps it was the stiff and old-fashioned aristocratic etiquette and discipline on display here that pushed Rose to seek Jack. What came next was the iconic scene at the bow of the Titanic, where Jack holds her as if she "is flying."
 
 ![The iconic scene](assets/mpv-shot0051.jpg)
 
