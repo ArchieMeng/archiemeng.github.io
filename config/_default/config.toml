@@ -1,7 +1,7 @@
 # Change baseurl before deploy
 baseurl = "https://archiemeng.github.io"
 languageCode = "en-us"
-paginate = 5
+pagination.pagerSize = 5
 title = "Archie Meng"
 
 # Theme i18n support
