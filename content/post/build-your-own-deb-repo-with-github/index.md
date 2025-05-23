@@ -9,6 +9,7 @@ hidden: false
 comments: false
 isCJKLanguage: false
 draft: false
+lastmod: 2025-05-23T21:10:48+08:00
 ---
 
 ## Introduction  
@@ -86,7 +87,7 @@ GitHub Pages provides free static site hosting. You can host your repository as 
 
 - Build `.deb` packages.
 
-- Add packages to the repository:
+- Add packages to the repository. Choose one from the following two methods according to your case.
 
     - Use `.changes` files:  
       
@@ -111,7 +112,7 @@ deb [signed-by=/path/to/public.key] https://username.github.io/repo-name release
 Replace placeholders accordingly.  
 
 ## Workflow Method  
-The direct method works for small packages, but GitHub’s [file size limits](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) (100 MB/file) and [Git LFS quotas](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota) make it impractical for large packages. Instead, use GitHub Actions to build and host packages dynamically via GitHub Pages.  
+The direct method works for small packages, but GitHub’s [file size limits](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) (100 MB/file) and [Git LFS quotas](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota) make it impractical for large packages. Instead, use GitHub Actions to build and host packages dynamically via GitHub Pages.
 
 ### Package Build Workflow Example  
 **[From Droidian Sony Pdx206 Kernel Repository](https://github.com/ArchieMeng/kernel_sony_sm8250/blob/78703e21ebb86fb0b6e5bc91d8c7b671696f0bd0/.github/workflows/build.yml)**:  
@@ -197,7 +198,7 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-This section uses the releng build tool provided by Droidian (which I later discovered is part of the gbp/Git Build Package toolchain) for packaging. For regular Debian packages, you can also use `dpkg-buildpackage` directly. Signing during this stage is optional since packages will be signed together during repository import stage.
+This section uses the `releng` build tool provided by Droidian (which I later discovered is part of the gbp/Git Build Package toolchain) for packaging. For regular Debian packages, you can also use `dpkg-buildpackage` directly. The major difference between these two methods is that, `releng` will use git informations as version name while `dpkg-buildpacakge` will strictly follow the version name recorded in `debian/changelog`. Signing during this stage is optional since packages will be signed together during repository import stage.
 
 ```yaml
 - name: Generate files for Github Page of this repo
@@ -240,6 +241,8 @@ This process is significantly simpler than manual repository setup thanks to the
    
    ```bash
    gpg --export --armor [fingerprint] > public.key
+
+> Replace `fingerprint` with the actual one of your public key.
 
 **[Workflow from ArchieMeng/custom-debs](https://github.com/ArchieMeng/custom-debs/blob/2b8c360fefad80d80f553d101f84772b6b87d72b/.github/workflows/generate.yml)**:  
 

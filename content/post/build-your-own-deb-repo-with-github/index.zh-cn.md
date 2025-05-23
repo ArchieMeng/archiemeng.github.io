@@ -9,20 +9,21 @@ hidden: false
 comments: false
 isCJKLanguage: true
 draft: false
+lastmod: 2025-05-23T21:10:48+08:00
 ---
 ## 引言
-有过自己开发修改开源软件经验的人应该都清楚，改好的软件包最后都是要分发出去给人安装起来的。最合适的方式就是构建一个自己的软件包仓库，这样能整合进系统，同时也能保证及时更新。这也就是类似现在Arch系的ArchCN，Debian系里的PPA的东西。
-一般构建仓库都需要专门的工具，甚至庞大的系统，比如OBS. 但，这次我要介绍的并不是那种构建大而全包仓库系统的方法。相反，它们是一些非常简单，适合只需要分发自己打包的仓库构建方法。
+有过自己开发修改开源软件经验的人应该都清楚，改好的软件包最后都是要分发出去给人安装起来的。最合适的方式就是构建一个自己的软件包仓库，这样能整合进系统，同时也能保证及时更新。这也就是类似现在 Arch 系的 ArchCN，Debian 系里的 PPA 的东西。
+一般构建仓库都需要专门的工具，甚至庞大的系统，比如 OBS. 但，这次我要介绍的并不是那种构建大而全包仓库系统的方法。相反，它们是一些非常简单，适合只需要分发自己打包的仓库构建方法。
 
-本文仅介绍Debian系Deb包的打包建仓方法，但其思路同样可以用于构建其他包管理系统的软件仓库。
+本文仅介绍 Debian 系 Deb 包的打包建仓方法，但其思路同样可以用于构建其他包管理系统的软件仓库。
 
 ## 核心思路
 
-使用reprepro建立软件仓库。通过某种方式打包好软件之后，再使用reprepro导入仓库。仓库内容通过http服务公开为一个站点，使得所有人都可以公开使用生成好的软件仓库。
+使用`reprepro`建立软件仓库。通过某种方式打包好软件之后，再使用 `reprepro` 导入仓库。仓库内容通过 HTTP 服务公开为一个站点，使得所有人都可以公开使用生成好的软件仓库。
 
 ## 直接方式
 
-Github提供了Github Page 这中http站点服务。所以，可以将整个生成好的软件仓库作为一个git仓库托管到Github,然后用Github Page直接将该分支的内容作为http站点的内容来提供软件仓库服务。构建仓库的过程具体可以参考[SetupWithReprepro](https://wiki.debian.org/DebianRepository/SetupWithReprepro)或其他文档。这里以我之前用过的 reprepro 来讲解建仓流程。
+Github 提供了 Github Page 这种 HTTP 站点服务。所以，可以将整个生成好的软件仓库作为一个 git 仓库托管到Github,然后用Github Page直接将该分支的内容作为 HTTP 站点的内容来提供软件仓库服务。构建仓库的过程具体可以参考 Debian 官方的 [SetupWithReprepro](https://wiki.debian.org/DebianRepository/SetupWithReprepro) 或其他文档。这里以我之前用过的 `reprepro` 来讲解建仓流程。
 
 核心步骤如下：
 
@@ -42,7 +43,7 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
   ssb   cv25519 2025-05-17 [E] [expires: 2028-05-16]
   ```
 
-  以上的`9FCD68DE8EFE8EC94ABEFDCB4FC5CF6FC16FDEF3`就是后面要用的签名私钥指纹。
+  以上的示例`9FCD68DE8EFE8EC94ABEFDCB4FC5CF6FC16FDEF3`就是后面要用的签名私钥指纹。实际需要替换成真正使用的密钥指纹。
 
   同时，记得导出公钥以便仓库用户能够验证签名。
 
@@ -71,7 +72,7 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
   Description: <Your project description>
   ```
 
-  需要填的配置项的含义，请参考[Configure reprepro](https://wiki.debian.org/DebianRepository/SetupWithReprepro#Configure_reprepro)
+  需要填的配置项的含义，请参考 [Configure reprepro](https://wiki.debian.org/DebianRepository/SetupWithReprepro#Configure_reprepro)
 
 - 创建一个`/path/to/your/repo/conf/options`文件。大致如下：
 
@@ -91,9 +92,9 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
   reprepro ...
   ```
 
-- 打包deb包
+- 打包 deb 包
 
-- 将deb包添加进这个仓库
+- 将 deb 包添加进这个仓库。以下两种方法按需选择。
 
   - 使用`.changes`文件
 
@@ -101,7 +102,7 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
   reprepro -b /path/to/your/repo include <release-name> <package>.changes
   ```
 
-  - 使用deb包文件
+  - 使用 deb 包文件
 
   ```bash
   reprepro -b /path/to/your/repo includedeb <release-name> <package>.deb
@@ -112,11 +113,11 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
 
 - 将本地配置生成的软件仓库目录添加为git repo
 
-- git 仓库推送到github
+- git 仓库推送到 Github
 
-- github仓库开启Github Pages功能，并选择从当前分支部署。等Github Page完成之后，这个新建的仓库就可以被公开访问使用了。
+- Github 仓库开启 Github Pages 功能，并选择从当前分支部署。等 Github Page 完成之后，这个新建的仓库就可以被公开访问使用了。
 
-- 用户端使用的source配置大概如下：
+- 用户端使用的 source.list 配置大概如下：
 
   ```
   deb [signed-by=/path/to/public.key] https://username.github.io/repo-name release-name component
@@ -126,18 +127,18 @@ Github提供了Github Page 这中http站点服务。所以，可以将整个生�
 
 ## 工作流方法
 
-既然上面的方法简单明了，为何会有这一节呢？欸嘿，[github对仓库的单文件限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) 了解一下。也就是说，当仓库的单个文件超过100MB时（一般是比较大的软件包），就不得不开启Git LFS来托管该文件了。而[Git LFS也是有免费额度限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota)的。当用了超过1GB之后，就不得不升级会员或者买数据包了。价格总之，我觉得很不划算。~~（结果笔者还是当了几个月冤大头，开了一会。）~~
+既然上面的方法简单明了，为何会有这一节呢？欸嘿，[Github 对仓库的单文件限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) 了解一下。也就是说，当仓库的单个文件超过100MB时（一般是比较大的软件包），就不得不开启Git LFS来托管该文件了。而 [Git LFS 也是有免费额度限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota)的。当用了超过1GB之后，就不得不升级会员或者买数据包了。价格总之，我觉得很不划算。~~（结果笔者还是当了几个月冤大头，开了一会。）~~
 
-为了绕过这种情况，需要解决不应该直接在仓库里托管软件包的问题。既然都用Github Pages了，那我在它建站的时候，在工作流里导入软件包来建仓不是也可以吗？毕竟[Github工作流免费运行机器](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories)和[Github Pages的大小限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)显然比Git LFS的更加宽松。
+为了绕过这种情况，需要解决不应该直接在仓库里托管软件包的问题。既然都用 Github Pages 了，那我在它建站的时候，在工作流里导入软件包来建仓不是也可以吗？毕竟[ Github 工作流免费运行机器](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories)和[ Github Pages 的大小限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)显然比 Git LFS 的更加宽松。
 
-而软件包从何而来？这就见仁见智了。不过就我自己目前在维护的仓库来看，需要打包的软件源码仓库都在Github上，且都配置了构建测试CI，那么多走一步给它们都加上分发的CD流程也是顺理成章的。所以，我目前的设计是在测试构建之后，将软件包整理，分发到软件名子路径的本账号github pages上。没错，每个软件包代码仓库也将生成一个对应软件包的github pages页面。这样有两点好处：
+而软件包从何而来？这就见仁见智了。不过就我自己目前在维护的仓库来看，需要打包的软件源码仓库都在Github上，且都配置了构建测试 CI，那么多走一步给它们都加上分发的CD流程也是顺理成章的。所以，我目前的设计是在测试构建之后，将软件包整理，分发到软件名子路径的本账号 Github Pages 上。没错，每个软件包代码仓库也将生成一个对应软件包的 Github Pages 页面。这样有两点好处：
 
 1. 之后仓库构建流程只需要直接从这个子页面下载软件包即可。
-1. 测试工作流的构建产物不再随时间失效，而是被Github Pages持久化了。（尽管也可以通过Github Release发布）
+1. 测试工作流的构建产物不再随时间失效，而是被 Github Pages 持久化了。（尽管也可以通过 Github Release 发布）
 
-### 软件包打包工作流
+### 打包工作流
 
-**[来自Droidian Sony Pdx206内核仓库的样例](https://github.com/ArchieMeng/kernel_sony_sm8250/blob/78703e21ebb86fb0b6e5bc91d8c7b671696f0bd0/.github/workflows/build.yml)：**
+**[来自 Droidian Sony Pdx206 内核仓库的样例](https://github.com/ArchieMeng/kernel_sony_sm8250/blob/78703e21ebb86fb0b6e5bc91d8c7b671696f0bd0/.github/workflows/build.yml)：**
 
 ```yaml
 name: Build CI
@@ -236,7 +237,7 @@ jobs:
     '''
 ```
 
-这一部分是通过Droidian提供的releng构建工具（后面查了下看，好像是gbp构建工具的一部分）去打包。一般的Debian软件包也可以直接使用dpkg-buildpackage去打包。可以不需要签名，因为之后导入仓库的时候会统一进行签名。
+这一部分是通过 Droidian 提供的 releng 构建工具（后面查了下看，好像是 gbp 构建工具的一部分）去打包。一般的 Debian 软件包也可以直接使用 dpkg-buildpackage 去打包。唯一的区别是 releng 是 gbp 的构建工具，会使用 git 信息去打版本号，而 dpkg-buildpackage 会从严格按照 debian/changelog 中的版本号。打出来的包不需要签名，之后导入仓库的时候会统一进行签名。
 
 ```yaml
 - name: Generate files for Github Page of this repo
@@ -268,9 +269,9 @@ jobs:
 
 ### 仓库构建工作流
 
-因为可以直接借用现有的 morph027/apt-repo-action@v3.6 建仓工作流，所以这一部分反倒比自己手动建仓简单很多。仅需填写一些必要的仓库信息并准备自己的签名密钥填入项目的SIGNING_KEY secrets 即可。记得导出公钥想办法分发部署到需要添加源的设备上即可。
+因为可以直接借用现有的 morph027/apt-repo-action@v3.6 建仓工作流，所以这一部分反倒比自己手动建仓简单很多。仅需填写一些必要的仓库信息并准备自己的签名密钥填入项目的 `SIGNING_KEY secrets` 即可。记得导出公钥想办法分发部署到需要添加源的设备上即可。
 
-[ArchieMeng/custom-debs的工作流](https://github.com/ArchieMeng/custom-debs/blob/2b8c360fefad80d80f553d101f84772b6b87d72b/.github/workflows/generate.yml):
+[ArchieMeng/custom-debs 的工作流](https://github.com/ArchieMeng/custom-debs/blob/2b8c360fefad80d80f553d101f84772b6b87d72b/.github/workflows/generate.yml):
 
 ```yaml
 name: Generate and Deploy Debian Repo
@@ -380,7 +381,7 @@ jobs:
 
 - 项目私密变量 SIGNING_KEY. 这个可以在`项目Settings > Security > Secrets and variables > Actions`里填写. (可以通过`gpg --export-secret-keys -a <fingerprint>`导出)
 
-- 修改Github Pages默认分支保护规则: 
+- 修改 Github Pages 默认分支保护规则: 
 
   在`项目Settings > Environments > github-pages (点击这个名字进入配置页面) > Deployment branches and tags` 调整允许部署的分支或标签
 
