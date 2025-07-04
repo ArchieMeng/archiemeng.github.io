@@ -112,10 +112,110 @@ deb [signed-by=/path/to/public.key] https://username.github.io/repo-name release
 Replace placeholders accordingly.  
 
 ## Workflow Method  
-The direct method works for small packages, but GitHub’s [file size limits](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) (100 MB/file) and [Git LFS quotas](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota) make it impractical for large packages. Instead, use GitHub Actions to build and host packages dynamically via GitHub Pages.
 
-### Package Build Workflow Example  
+Given the simplicity and clarity of the aforementioned method, one might inquire as to the necessity of this particular section. Ah, a closer examination of [GitHub's single-file repository limits](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) reveals the underlying reason. Specifically, when a single file within a repository exceeds 100MB—a common occurrence with larger software packages—the adoption of Git LFS becomes imperative for its hosting. However, [Git LFS also imposes free tier limitations](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota). Upon exceeding 1GB of usage, one is compelled to either upgrade their membership or acquire additional data packages. In essence, the cost-effectiveness of this approach is, in my estimation, rather unfavorable. ~~(The author, regrettably, did incur these expenses for a few months.)~~
+
+To circumvent this predicament, it becomes necessary to address the issue of directly hosting software packages within the repository. A highly pragmatic solution involves leveraging GitHub Releases for the hosting of compiled software packages. (Previously, a lapse in judgment led to the use of GitHub Pages.) ~~One might ponder, if GitHub Pages were already in use, whether it would not be feasible to import packages within the workflow during site creation, thereby establishing the repository. After all, [GitHub Actions' free runner machines](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories) and [GitHub Pages' size limitations](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits) are demonstrably more lenient than those of Git LFS.~~
+
+Whence, then, do these software packages originate? This question, naturally, invites diverse perspectives. However, from the vantage point of the repositories I currently maintain, the source code repositories requiring packaging reside on GitHub and are already configured with build and test CI. Consequently, extending these with a distribution CD process represents a logical progression. Thus, my current architectural design entails organizing the software packages subsequent to their test build, followed by the implementation of two distinct strategies:
+
+Publishing the software packages to GitHub Releases. This approach offers the advantage of not consuming GitHub Pages bandwidth and provides users with a straightforward and intuitive download experience.
+Distributing them to a sub-path on the current account's GitHub Pages, named after the software. Indeed, each software package's code repository will also generate a corresponding GitHub Pages site. This yields two principal benefits:
+
+	1. Subsequent repository build processes can directly retrieve the packages from this sub-page.
+	1. The build artifacts of the test workflow are no longer subject to temporal expiration, but are instead persistently maintained by GitHub Pages. (Though publication via GitHub Release also offers persistence.)
+
+## Workflow Methodology
+
+Given the simplicity and clarity of the aforementioned method, one might inquire as to the necessity of this particular section. Ah, a closer examination of [GitHub's single-file repository limits] reveals the underlying reason. Specifically, when a single file within a repository exceeds 100MB—a common occurrence with larger software packages—the adoption of Git LFS becomes imperative for its hosting. However, [Git LFS also imposes free tier limitations]. Upon exceeding 1GB of usage, one is compelled to either upgrade their membership or acquire additional data packages. In essence, the cost-effectiveness of this approach is, in my estimation, rather unfavorable. (The author, regrettably, did incur these expenses for a few months.)
+
+To circumvent this predicament, it becomes necessary to address the issue of directly hosting software packages within the repository. A highly pragmatic solution involves leveraging GitHub Releases for the hosting of compiled software packages. (Previously, a lapse in judgment led to the use of GitHub Pages.) One might ponder, if GitHub Pages were already in use, whether it would not be feasible to import packages within the workflow during site creation, thereby establishing the repository. After all, [GitHub Actions' free runner machines] and [GitHub Pages' size limitations] are demonstrably more lenient than those of Git LFS.
+
+Whence, then, do these software packages originate? This question, naturally, invites diverse perspectives. However, from the vantage point of the repositories I currently maintain, the source code repositories requiring packaging reside on GitHub and are already configured with build and test CI. Consequently, extending these with a distribution CD process represents a logical progression. Thus, my current architectural design entails organizing the software packages subsequent to their test build, followed by the implementation of two distinct strategies:
+
+- Publishing the software packages to GitHub Releases. This approach offers the advantage of not consuming GitHub Pages bandwidth and provides users with a straightforward and intuitive download experience.
+- Distributing them to a sub-path on the current account's GitHub Pages, named after the software. Indeed, each software package's code repository will also generate a corresponding GitHub Pages site. This yields two principal benefits:
+  1. Firstly, subsequent repository build processes can directly retrieve the packages from this sub-page.
+  2. Secondly, the build artifacts of the test workflow are no longer subject to temporal expiration, but are instead persistently maintained by GitHub Pages. (Though publication via GitHub Release also offers persistence.)
+
+### GitHub Release-Based Approach
+
+#### Key Components of the Packaging Workflow
+
+Let us again consider [kernel_sony_sm8250](https://github.com/ArchieMeng/kernel_sony_sm8250/tree/3545b69d5af39551fdcac97cb46d56380ad94acc) as an illustrative example.
+
+```
+YAML- name: Get version
+  run: echo "version=$(head -n1 debian/changelog | cut -d '(' -f2 | cut -d ')' -f1 | sed 's/+/-/g')" >> $GITHUB_ENV
+- name: Create latest release
+  uses: softprops/action-gh-release@v2.2.2
+  with:
+    files: /tmp/results/*
+    tag_name: ${{ env.version }}
+    draft: false
+```
+
+Initially, the current version number must be extracted from `debian/changelog`. Within this project, the changelog version is generated by `releng-build-package` (which reuses `gbp`'s build script). Distinct matching rules apply for different version generation methodologies. The subsequent release will utilize this version number as its tag.
+
+The process then proceeds with the upload and related operations.
+
+#### Key Components of the Software Repository Build Workflow
+
+Here, we shall use this version of [custom-debs](https://github.com/ArchieMeng/custom-debs/tree/a1f17eeea13d83529bcbeb146eee32e4e53070d) as an example.
+
+```yaml
+- name: Create Packages
+env:
+  GH_TOKEN: ${{ github.token }}
+run: |
+  mkdir -p packages
+  while read rep; do
+    echo "Download $rep"
+    gh release download -D packages -p "*.deb" -R "$rep"
+  done < package_repos
+
+- name: Create APT Repository
+id: create-apt-repo
+uses: morph027/apt-repo-action@v3.6
+with:
+  repo-name: ${{ env.REPO_NAME }}
+  scan-dir: ./packages  # Use the 'scan-dir' option
+  signing-key: ${{ secrets.SIGNING_KEY }}
+  codename: ${{ env.CODENAME }}
+  components: ${{ env.COMPONENTS }}
+  architectures: ${{ env.ARCHITECTURES }}
+  import-from-repo-url: "https://archiemeng.github.io/custom-debs"
+```
+
+Herein, the project names from which `.deb` packages are to be retrieved from releases are first read from `package_repos`. These names adhere to the `<owner>/<repo>` format, with each repository listed on a separate line.
+
+Subsequently, the repository's various attributes are configured based on environment and secret variables.
+
+To employ this workflow, the following variables necessitate definition:
+
+- Workflow Environment Variables
+
+  ```yaml
+  env:
+    CODENAME: trixie
+    COMPONENTS: main
+    ARCHITECTURES: "arm64"
+  ```
+
+- Project Secret Variable `SIGNING_KEY`. This variable can be populated within `Project Settings > Security > Secrets and variables > Actions`. (It can be exported via `gpg --export-secret-keys -a <fingerprint>`.)
+
+- Modification of GitHub Pages Default Branch Protection Rules:
+
+  Within `Project Settings > Environments > github-pages (click to access configuration page) > Deployment branches and tags`, adjust the branches or tags permitted for deployment.
+
+The configuration appears approximately as follows:
+
+![image-20250517213815932](assets/image-20250517213815932.png)
+
+### GitHub Pages-Based Approach (Deprecated)
+
 **[From Droidian Sony Pdx206 Kernel Repository](https://github.com/ArchieMeng/kernel_sony_sm8250/blob/78703e21ebb86fb0b6e5bc91d8c7b671696f0bd0/.github/workflows/build.yml)**:  
+
 ```yaml
 name: Build CI
 

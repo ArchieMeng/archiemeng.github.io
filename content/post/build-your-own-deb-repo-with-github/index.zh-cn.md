@@ -129,14 +129,94 @@ Github 提供了 Github Page 这种 HTTP 站点服务。所以，可以将整个
 
 既然上面的方法简单明了，为何会有这一节呢？欸嘿，[Github 对仓库的单文件限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github) 了解一下。也就是说，当仓库的单个文件超过100MB时（一般是比较大的软件包），就不得不开启Git LFS来托管该文件了。而 [Git LFS 也是有免费额度限制](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-storage-and-bandwidth-usage#storage-quota)的。当用了超过1GB之后，就不得不升级会员或者买数据包了。价格总之，我觉得很不划算。~~（结果笔者还是当了几个月冤大头，开了一会。）~~
 
-为了绕过这种情况，需要解决不应该直接在仓库里托管软件包的问题。既然都用 Github Pages 了，那我在它建站的时候，在工作流里导入软件包来建仓不是也可以吗？毕竟[ Github 工作流免费运行机器](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories)和[ Github Pages 的大小限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)显然比 Git LFS 的更加宽松。
+为了绕过这种情况，需要解决不应该直接在仓库里托管软件包的问题。一个非常实用的方法就是使用Github Release 托管构建出来的软件包。（之前脑抽了，就使用Github Pages）~~既然都用 Github Pages 了，那我在它建站的时候，在工作流里导入软件包来建仓不是也可以吗？毕竟[ Github 工作流免费运行机器](https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories)和[ Github Pages 的大小限制](https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits)显然比 Git LFS 的更加宽松。~~
 
-而软件包从何而来？这就见仁见智了。不过就我自己目前在维护的仓库来看，需要打包的软件源码仓库都在Github上，且都配置了构建测试 CI，那么多走一步给它们都加上分发的CD流程也是顺理成章的。所以，我目前的设计是在测试构建之后，将软件包整理，分发到软件名子路径的本账号 Github Pages 上。没错，每个软件包代码仓库也将生成一个对应软件包的 Github Pages 页面。这样有两点好处：
+而软件包从何而来？这就见仁见智了。不过就我自己目前在维护的仓库来看，需要打包的软件源码仓库都在Github上，且都配置了构建测试 CI，那么多走一步给它们都加上分发的CD流程也是顺理成章的。所以，我目前的设计是在测试构建之后，将软件包整理，然后进行以下两种方案：
 
-1. 之后仓库构建流程只需要直接从这个子页面下载软件包即可。
-1. 测试工作流的构建产物不再随时间失效，而是被 Github Pages 持久化了。（尽管也可以通过 Github Release 发布）
+- 使用Github Release发布软件包到Release. 这样的好处是不会占Github Pages流量，并且用户可以很直观方便地下载。
+- 分发到软件名子路径的本账号 Github Pages 上。没错，每个软件包代码仓库也将生成一个对应软件包的 Github Pages 页面。这样有两点好处：
+  1. 之后仓库构建流程只需要直接从这个子页面下载软件包即可。
+  2. 测试工作流的构建产物不再随时间失效，而是被 Github Pages 持久化了。（尽管也可以通过 Github Release 发布）
 
-### 打包工作流
+### 基于Github Release的方案
+
+#### 打包工作流关键部分
+
+还是以[kernel_sony_sm8250](https://github.com/ArchieMeng/kernel_sony_sm8250/tree/3545b69d5af39551fdcac97cb46d56380ad94acc)为例。
+
+```yaml
+- name: Get version
+  run: echo "version=$(head -n1 debian/changelog | cut -d '(' -f2 | cut -d ')' -f1 | sed 's/+/-/g')" >> $GITHUB_ENV
+- name: Create latest release
+  uses: softprops/action-gh-release@v2.2.2
+  with:
+    files: /tmp/results/*
+    tag_name: ${{ env.version }}
+    draft: false
+```
+
+首先，要从debian/changelog里解出当前的版本号。在这个项目中，changelog版本号是由releng-build-package (复用gbp的build脚本)生成的。针对不同版本号生成方法有不同的匹配规则。接下来的release会拿这个版本号做Tag.
+
+然后就是上传之类的了。
+
+#### 仓库构建工作流关键部分
+
+这里以这个版本的[custom-debs](https://github.com/ArchieMeng/custom-debs/tree/a1f17eeea13d833529bcbeb146eee32e4e53070d)为例
+
+```yaml
+- name: Create Packages
+env:
+  GH_TOKEN: ${{ github.token }}
+run: |
+  mkdir -p packages
+  while read rep; do
+    echo "Download $rep"
+    gh release download -D packages -p "*.deb" -R "$rep"
+  done < package_repos
+
+- name: Create APT Repository
+id: create-apt-repo
+uses: morph027/apt-repo-action@v3.6
+with:
+  repo-name: ${{ env.REPO_NAME }}
+  scan-dir: ./packages  # Use the 'scan-dir' option
+  signing-key: ${{ secrets.SIGNING_KEY }}
+  codename: ${{ env.CODENAME }}
+  components: ${{ env.COMPONENTS }}
+  architectures: ${{ env.ARCHITECTURES }}
+  import-from-repo-url: "https://archiemeng.github.io/custom-debs"
+```
+
+其中，先从packages里读取需要拉取Release中deb包的项目名称。名称以<owner>/<repo>为格式。每行一个repo.
+
+然后就是根据环境变量和私密变量配置仓库的各种属性。
+
+要使用这个工作流，需要定义以下几个变量:
+
+- 工作流环境变量 
+
+  ```yaml
+  env:
+    CODENAME: trixie
+    COMPONENTS: main
+    ARCHITECTURES: "arm64"
+  ```
+
+- 项目私密变量 SIGNING_KEY. 这个可以在`项目Settings > Security > Secrets and variables > Actions`里填写. (可以通过`gpg --export-secret-keys -a <fingerprint>`导出)
+
+- 修改 Github Pages 默认分支保护规则: 
+
+  在`项目Settings > Environments > github-pages (点击这个名字进入配置页面) > Deployment branches and tags` 调整允许部署的分支或标签
+
+大概长这样的：
+
+![image-20250517213815932](assets/image-20250517213815932.png)
+
+### 基于Github Pages的方案（已废弃）
+
+这是本人custom-debs最初的实现方式。原因是软件包仓库发布工作流已经有Github Pages了，顺理成章的deb包项目是用Github Pages发布托管deb包也应该是会非常顺利的。
+
+#### 打包工作流
 
 **[来自 Droidian Sony Pdx206 内核仓库的样例](https://github.com/ArchieMeng/kernel_sony_sm8250/blob/78703e21ebb86fb0b6e5bc91d8c7b671696f0bd0/.github/workflows/build.yml)：**
 
@@ -267,7 +347,7 @@ jobs:
 
 生成目录页面，以方便直接访问项目子路径时显示构建产物列表。
 
-### 仓库构建工作流
+#### 仓库构建工作流
 
 因为可以直接借用现有的 morph027/apt-repo-action@v3.6 建仓工作流，所以这一部分反倒比自己手动建仓简单很多。仅需填写一些必要的仓库信息并准备自己的签名密钥填入项目的 `SIGNING_KEY secrets` 即可。记得导出公钥想办法分发部署到需要添加源的设备上即可。
 
@@ -381,7 +461,7 @@ jobs:
 
 - 项目私密变量 SIGNING_KEY. 这个可以在`项目Settings > Security > Secrets and variables > Actions`里填写. (可以通过`gpg --export-secret-keys -a <fingerprint>`导出)
 
-- 修改 Github Pages 默认分支保护规则: 
+- 修改 Github Pages 默认分支保护规则:
 
   在`项目Settings > Environments > github-pages (点击这个名字进入配置页面) > Deployment branches and tags` 调整允许部署的分支或标签
 
