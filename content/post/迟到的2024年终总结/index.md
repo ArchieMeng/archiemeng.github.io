@@ -6,6 +6,21 @@ lastMod: 2025-06-27T01:22:27+08:00
 image: 
 math: 
 license: 
+Categories:
+  - Life
+tags:
+  - 2024
+  - Year-End Summary
+  - Droidian
+  - LineageOS
+  - Movies
+  - Documentary
+  - Books
+  - Manga
+  - Illustration
+  - Anime
+  - Music
+  - Games
 hidden: false
 comments: false
 isCJKLanguage: false

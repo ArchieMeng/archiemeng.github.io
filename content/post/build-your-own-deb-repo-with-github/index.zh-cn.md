@@ -5,6 +5,19 @@ date: 2025-05-17T22:47:25+08:00
 image: 
 math: 
 license: 
+Categories:
+  - Tech
+tags:
+  - GitHub
+  - Debian
+  - 软件仓库
+  - 打包
+  - reprepro
+  - GitHub Actions
+  - 工作流
+  - APT
+  - GPG
+  - 持续集成
 hidden: false
 comments: false
 isCJKLanguage: true

@@ -5,6 +5,17 @@ date: 2025-10-08T16:14:23+08:00
 image: 
 math: 
 license: 
+categories:
+  - Tech
+tags:
+  - 技术总结
+  - 内核配置
+  - LineageOS
+  - Droidian
+  - 设备适配
+  - 调试
+  - bootloop
+  - pstore
 hidden: false
 comments: false
 isCJKLanguage: true

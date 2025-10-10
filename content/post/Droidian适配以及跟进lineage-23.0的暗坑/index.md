@@ -5,6 +5,17 @@ date: 2025-10-08T16:14:23+08:00
 image:
 math:
 license:
+Categories:
+  - Tech
+Tags:
+  - Technical Summary
+  - Kernel Configuration
+  - LineageOS
+  - Droidian
+  - Device Adaptation
+  - Debugging
+  - Bootloop
+  - Pstore
 hidden: false
 comments: false
 isCJKLanguage: false

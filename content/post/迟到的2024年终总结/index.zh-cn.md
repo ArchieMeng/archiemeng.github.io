@@ -5,7 +5,22 @@ date: 2025-06-20T15:58:26+08:00
 lastMod: 2025-06-27T01:12:13+08:00
 image: 
 math: 
-license: 
+license:
+Categories:
+  - Life
+tags:
+  - 2024
+  - 年终总结
+  - Droidian
+  - LineageOS
+  - 电影
+  - 纪录片
+  - 书籍
+  - 漫画
+  - 插画
+  - 动漫
+  - 音乐
+  - 游戏
 hidden: false
 comments: false
 isCJKLanguage: true

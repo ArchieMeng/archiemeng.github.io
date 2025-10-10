@@ -6,6 +6,16 @@ lastmod: 2024-11-15T21:09:32+08:00
 image: 
 math: 
 license: 
+Categories:
+  - Life
+tags:
+  - 泰坦尼克
+  - 电影
+  - 观后感
+  - 爱情
+  - 人生
+  - 角色成长
+  - 个人感想
 hidden: false
 comments: false
 isCJKLanguage: false

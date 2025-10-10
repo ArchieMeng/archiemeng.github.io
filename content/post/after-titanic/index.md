@@ -6,6 +6,16 @@ lastmod: 2024-11-15T21:09:32+08:00
 image: 
 math: 
 license: 
+Categories:
+  - Life
+tags:
+  - Titanic
+  - Film
+  - Review
+  - Love
+  - Life
+  - Character Development
+  - Personal Thoughts
 hidden: false
 comments: false
 isCJKLanguage: false

@@ -5,6 +5,19 @@ date: 2025-05-17T22:47:25+08:00
 image: 
 math: 
 license: 
+Categories:
+  - Tech
+tags:
+  - GitHub
+  - Debian
+  - Repository
+  - Packaging
+  - reprepro
+  - GitHub Actions
+  - Workflow
+  - APT
+  - GPG
+  - CI/CD
 hidden: false
 comments: false
 isCJKLanguage: false
